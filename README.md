@@ -22,7 +22,105 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Needs to be filled in. Demos
+
+```ruby
+def demo(values)
+  values
+    &.j8_stream
+    &.map { |o| o + 5 }
+    &.filter { |o| o % 3 == 0 }
+    &.to_a
+end
+
+[18] pry(main)> demo([6,54,3,1,3,5,6,90,85])
+=> [6, 90]
+[19] pry(main)>
+
+class Mod3Predicate < J8::Predicate
+  def initialize; end
+
+  def test(o)
+    o % 3 == 0
+  end
+end
+
+def demo2(values)
+  values
+    &.j8_stream
+    &.map { |o| o + 5 }
+    &.filter(Mod3Predicate.new)
+    &.to_a
+end
+
+[19] pry(main)> demo2([6,54,3,1,3,5,6,90,85])
+=> [6, 90]
+[20] pry(main)>
+
+class ModPredicate < J8::Predicate
+  def initialize(mod)
+    @mod = mod
+  end
+
+  def test(o)
+    o % @mod == 0
+  end
+end
+
+def demo3(values)
+  values
+    &.j8_stream
+    &.map { |o| o + 5 }
+    &.filter(ModPredicate.new(3))
+    &.to_a
+end
+
+[20] pry(main)> demo3([6,54,3,1,3,5,6,90,85])
+=> [6, 90]
+[21] pry(main)>
+
+class Add5Function < J8::Function
+  def initialize; end
+
+  def apply(o)
+    o + 5
+  end
+end
+
+def demo4(values)
+  values
+    &.j8_stream
+    &.map(Add5Function.new)
+    &.filter(ModPredicate.new(3))
+    &.to_a
+end
+
+[21] pry(main)> demo4([6,54,3,1,3,5,6,90,85])
+=> [6, 90]
+[22] pry(main)>
+
+class AddFunction < J8::Function
+  def initialize(amount)
+    @amount = amount
+  end
+
+  def apply(o)
+    o + @amount
+  end
+end
+
+def demo5(values)
+  values
+    &.j8_stream
+    &.map(AddFunction.new(5))
+    &.filter(ModPredicate.new(3))
+    &.to_a
+end
+
+[22] pry(main)> demo5([6,54,3,1,3,5,6,90,85])
+=> [6, 90]
+[23] pry(main)>
+```
 
 ## Development
 
