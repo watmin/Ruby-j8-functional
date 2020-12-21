@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'j8/functional'
+
+require 'pry'
+require 'rb-inotify'
+
+def reloadable_dirs
+  Dir[File.join(__dir__, '..', 'lib', '**', '*.rb')]
+    .map { |path| File.dirname(path) }
+    .push(File.join(__dir__, '..', 'lib'))
+    .to_set
+    .to_a
+end
+
+def reloadable_files
+  reloadable_dirs.map { |dir| Dir["#{dir}/**/*.rb"] }.flatten
+end
+
+def reload!
+  reloadable_files.each(&method(:load))
+end
+
+def reloadable_notifier(dirs) # rubocop:disable Metrics/MethodLength
+  INotify::Notifier.new.tap do |notifier|
+    dirs.each do |dir|
+      notifier.watch(dir, :modify, :recursive) do |event|
+        path = File.join(event.watcher.path, event.name)
+        next unless path.end_with?('.rb')
+
+        begin
+          load File.expand_path(path)
+        rescue => e # rubocop:disable Style/RescueStandardError
+          puts "Failed to load #{path}. #{e.class}: #{e.message}"
+          next
+        end
+      end
+    end
+  end.run
+end
+
+def restart_reloader
+  return if @reloader_thread&.alive?
+
+  @reloader_thread&.join
+  @reloader_thread = Thread.new do
+    Thread.current.report_on_exception = false
+    reloadable_notifier(reloadable_dirs)
+  end
+end
+
+restart_reloader
+Pry.start
