@@ -147,7 +147,7 @@ RSpec.describe J8::Optional do
     context 'when value is not nil' do
       it 'then invokes the consumer with the value' do
         optional = J8::Optional.new(8)
-        optional.if_present(->(object) { @tracker.tracked = true })
+        optional.if_present(->(_) { @tracker.tracked = true })
 
         expect(@tracker.tracked).to eq true
       end
@@ -156,7 +156,7 @@ RSpec.describe J8::Optional do
     context 'when value is nil' do
       it 'then does nothing' do
         optional = J8::Optional.new
-        optional.if_present(->(object) { @tracker.tracked = true })
+        optional.if_present(->(_) { @tracker.tracked = true })
 
         expect(@tracker.tracked).to eq nil
       end
@@ -183,7 +183,7 @@ RSpec.describe J8::Optional do
     context 'when the value is not nil' do
       it 'then returns an optional with mapped value' do
         optional = J8::Optional.new(8)
-        result = optional.map(->(o) { o ** 2 })
+        result = optional.map(->(o) { o**2 })
 
         expect(result.present?).to eq true
         expect(result.value).to eq 64
@@ -193,7 +193,7 @@ RSpec.describe J8::Optional do
     context 'when the value is nil' do
       it 'then returns an empty optional' do
         optional = J8::Optional.new
-        result = optional.map(->(o) { o ** 2 })
+        result = optional.map(->(o) { o**2 })
 
         expect(result.empty?).to eq true
       end
@@ -231,7 +231,7 @@ RSpec.describe J8::Optional do
       context 'and when value is not nil' do
         it 'then returns the optional value' do
           optional = J8::Optional.new(8)
-          result = optional.or_else_get(->() { :else })
+          result = optional.or_else_get(-> { :else })
           expect(result).to eq 8
         end
       end
@@ -242,13 +242,14 @@ RSpec.describe J8::Optional do
             optional = J8::Optional.new
 
             expect do
-              optional.or_else_get(->() { nil })
+              optional.or_else_get(-> {})
             end.to raise_error(J8::NilException)
           end
         end
 
         context 'and when supplier returns a value' do
           it 'then returns the supplier value' do
+            # to do
           end
         end
       end
@@ -268,7 +269,7 @@ RSpec.describe J8::Optional do
       context 'and when value is not nil' do
         it 'then returns the optional value' do
           optional = J8::Optional.new(8)
-          result = optional.or_else_raise(->() { StandardError })
+          result = optional.or_else_raise(-> { StandardError })
           expect(result).to eq 8
         end
       end
@@ -278,7 +279,7 @@ RSpec.describe J8::Optional do
           optional = J8::Optional.new
 
           expect do
-            optional.or_else_raise(->() { StandardError })
+            optional.or_else_raise(-> { StandardError })
           end.to raise_error(StandardError)
         end
       end

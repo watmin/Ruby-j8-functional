@@ -48,6 +48,7 @@ module J8
     def callable_from_proc(callable, block)
       if block.nil?
         raise J8::NilException if callable.nil?
+
         raise_unless_lambda(callable)
 
         callable

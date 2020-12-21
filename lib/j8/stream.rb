@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module J8
-  class Stream
+  class Stream # rubocop:disable Metrics/ClassLength
     include J8::Common
 
     attr_reader :enumerator
@@ -25,23 +25,21 @@ module J8
     end
 
     def self.generate(supplier = nil, &block)
-      supplier = callable_from_proc(supplier, block)
+      callable = J8::Common.from_callable_class(supplier, block, J8::Supplier)
 
       J8::Stream.new(
         Enumerator.new do |enumerator|
-          supplier = J8::Common.from_callable_class(supplier, J8::Supplier)
-          loop { enumerator << supplier.get }
+          loop { enumerator << callable.get }
         end
       )
     end
 
     def self.iterate(seed, function = nil, &block)
-      supplier = callable_from_proc(supplier, block)
+      callable = J8::Common.from_callable_class(function, block, J8::Function)
 
       J8::Stream.new(
         Enumerator.new do |enumerator|
-          function = J8::Common.from_callable_class(function, J8::Function)
-          loop { enumerator << function.apply(seed) }
+          loop { enumerator << callable.apply(seed) }
         end
       )
     end
@@ -82,7 +80,7 @@ module J8
     def filter(predicate = nil, &block)
       callable = from_callable_class(predicate, block, J8::Predicate)
 
-      @enumerator.select { |n| predicate.test(n) }.j8_stream
+      @enumerator.select { |n| callable.test(n) }.j8_stream
     end
 
     def find_first

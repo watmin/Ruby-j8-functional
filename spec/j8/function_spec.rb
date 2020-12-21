@@ -40,12 +40,12 @@ RSpec.describe J8::Function do
   describe '#compose' do
     before(:each) do
       @object = OpenStruct.new
-      @function = J8::Function.new { |o| o.base = o.composed ; o }
+      @function = J8::Function.new { |o| o.base = o.composed; o }
     end
 
     context 'when given a valid callable' do
       it 'then creates a new function' do
-        composed = @function.compose { |o| o.composed = true ; o }
+        composed = @function.compose { |o| o.composed = true; o }
         composed.apply(@object)
 
         expect(@object.base).to eq true
@@ -73,12 +73,12 @@ RSpec.describe J8::Function do
   describe '#then' do
     before(:each) do
       @object = OpenStruct.new
-      @function = J8::Function.new { |o| o.base = true ; o }
+      @function = J8::Function.new { |o| o.base = true; o }
     end
 
     context 'when given a valid callable' do
       it 'then creates a new function' do
-        thened = @function.then { |o| o.thened = o.base ; o }
+        thened = @function.then { |o| o.thened = o.base; o }
         thened.apply(@object)
 
         expect(@object.base).to eq true

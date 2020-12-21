@@ -58,7 +58,7 @@ RSpec.describe J8::Predicate do
   describe '#and' do
     context 'when given a valid callable' do
       before(:each) do
-        @predicate = J8::Predicate.new(->(object) { object % 2 == 1 })
+        @predicate = J8::Predicate.new(->(object) { object.odd? })
       end
 
       it 'then creates a new predicate' do
@@ -87,7 +87,7 @@ RSpec.describe J8::Predicate do
   describe '#or' do
     context 'when given a valid callable' do
       before(:each) do
-        @predicate = J8::Predicate.new(->(object) { object % 2 == 1 })
+        @predicate = J8::Predicate.new(->(object) { object.odd? })
       end
 
       it 'then creates a new predicate' do

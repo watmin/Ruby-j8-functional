@@ -1,9 +1,27 @@
 ---
 
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.7
+  NewCops: enable
 
-Metrics/LineLength:
+Naming/FileName:
+  Exclude:
+    - '**/j8-functional.rb'
+
+Lint/EmptyClass:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Naming/MethodParameterName:
+  Enabled: false
+
+Style/Semicolon:
+  Exclude:
+    - '**/function_spec.rb'
+
+Layout/LineLength:
   Max: 120
 
 Metrics/BlockLength:

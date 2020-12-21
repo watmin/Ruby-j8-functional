@@ -2,7 +2,7 @@
 
 RSpec.describe J8::Supplier do
   before(:each) do
-    @supplier = J8::Supplier.new(->() { true })
+    @supplier = J8::Supplier.new(-> { true })
   end
 
   describe '.new' do

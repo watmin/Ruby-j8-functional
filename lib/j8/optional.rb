@@ -97,12 +97,9 @@ module J8
 
     def or_else_raise(supplier = nil, &block)
       callable = from_callable_class(supplier, block, J8::Supplier)
+      raise callable.get unless present?
 
-      if present?
-        @value
-      else
-        raise callable.get
-      end
+      @value
     end
   end
 end
