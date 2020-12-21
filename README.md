@@ -22,6 +22,8 @@ Or install it yourself as:
 
 ## Usage
 
+This project is partially complete, tests are half written and docs aren't written yet.
+
 Needs to be filled in. Demos
 
 ```ruby
